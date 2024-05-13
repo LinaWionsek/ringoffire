@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 })
 export class StartScreenComponent {
 
+  // private router because router just using in this component, not in another (like html file)
   constructor(private router: Router) { }
 
   newGame(){
