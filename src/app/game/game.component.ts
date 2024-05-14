@@ -11,7 +11,8 @@ import { Game } from './../../models/game';
 })
 export class GameComponent {
   pickCardAnimation = false;
-  game!: Game; //Variable vom Typ game
+  currentCard: string | undefined = '';
+  game: Game | undefined; //Variable vom Typ game
 
   ngOnInit(): void {
     this.newGame();
@@ -22,7 +23,19 @@ export class GameComponent {
     console.log(this.game);
   }
 
+  
   takeCard() {
-    this.pickCardAnimation = true;
+    if (!this.pickCardAnimation && this.game !== undefined) {
+      this.currentCard = this.game.stack.pop(); //nimmt letzten Wert aus Array, gibt Wert zurück, gleichzeitig wird dieser aus Array entfernt
+      console.log(this.currentCard)
+      this.pickCardAnimation = true;
+
+      setTimeout(() => {
+        this.pickCardAnimation = false;
+      }, 1500);
+
+    }
   }
+
+
 }
