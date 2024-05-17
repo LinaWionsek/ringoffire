@@ -10,11 +10,15 @@
         margin-left: 16px;
     }
   
-    background-color: #FCC800;
+    background-color: rgb(200, 200, 200, 0.8);
     img {
-        width: 100px;
-        height: 100px;
+        width: 70px;
+        height: 70px;
         object-fit: cover;
         border-radius: 100%;
     }
+}
+
+.player-active {
+    background-color: #FCC800;
 }
