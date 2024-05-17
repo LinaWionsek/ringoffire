@@ -46,7 +46,8 @@ export class GameComponent {
    
       this.game!.currentPlayer++;
       this.game!.currentPlayer = this.game!.currentPlayer % this.game!.players.length;
-      
+      // modulo sorgt dafür das obwohl currentplayer immer hoch gezählt wird, 
+      //das auf die anzahl der spieler gerechnet wird und wieder bei 0 angefnagen wird, wenn alle spieler dran waren
       //after card animation finished (1000ms), push currentCard to playedCards
       setTimeout(() => {
         this.pickCardAnimation = false;
