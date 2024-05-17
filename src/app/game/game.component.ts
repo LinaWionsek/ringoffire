@@ -31,6 +31,7 @@ export class GameComponent {
 
   ngOnInit(): void {
     this.newGame();
+    console.log('PLAYER', this.game!.currentPlayer)
   }
 
   newGame() {
@@ -42,7 +43,10 @@ export class GameComponent {
     if (!this.pickCardAnimation) {
       this.currentCard = this.game?.stack.pop(); //nimmt letzten Wert aus Array, gibt Wert zurück, gleichzeitig wird dieser aus Array entfernt
       this.pickCardAnimation = true;
-
+   
+      this.game!.currentPlayer++;
+      this.game!.currentPlayer = this.game!.currentPlayer % this.game!.players.length;
+      
       //after card animation finished (1000ms), push currentCard to playedCards
       setTimeout(() => {
         this.pickCardAnimation = false;
@@ -55,7 +59,9 @@ export class GameComponent {
     const dialogRef = this.dialog.open(DialogAddPlayerComponent);
     //neue Funktion wird aufgerufen mit der variable result (die dialog textfeld eingegeben wird)
     dialogRef.afterClosed().subscribe((result: string) => {
-     this.game?.players.push(result)
+      if(result &&result.length > 0){
+        this.game?.players.push(result)
+      }
     });
   }
 }
