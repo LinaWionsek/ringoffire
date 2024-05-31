@@ -7,6 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogAddPlayerComponent } from '../dialog-add-player/dialog-add-player.component';
 import { GameInfoComponent } from '../game-info/game-info.component';
+import { SaveGameService } from '../firebase-services/save-game/save-game.service';
 
 @Component({
   selector: 'app-game',
@@ -16,7 +17,8 @@ import { GameInfoComponent } from '../game-info/game-info.component';
     PlayerComponent,
     MatButtonModule,
     MatIconModule,
-    GameInfoComponent
+    GameInfoComponent,
+  
 
   ],
   templateUrl: './game.component.html',
@@ -27,7 +29,9 @@ export class GameComponent {
   currentCard?: string = '';
   game?: Game; //Variable vom Typ game
 
-  constructor(public dialog: MatDialog) {}
+  constructor(public dialog: MatDialog,
+    private SaveGameService: SaveGameService
+  ) {}
 
   ngOnInit(): void {
     this.newGame();
