@@ -13,6 +13,17 @@ export class Game {
         }
         shuffle(this.stack);
     }
+
+    // function returns json 
+    // this json returns variables with right values (defined players from above)
+    public toJson() {
+        return {
+            players: this.players ,
+            stack: this.stack,
+            playedCards: this.playedCards,
+            currentPlayer: this.currentPlayer 
+        }
+    }
 }
 // public weil wir in anderen Dateien darauf zugreifen wollen
 

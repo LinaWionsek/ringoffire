@@ -5,33 +5,65 @@ import {
   collectionData,
   onSnapshot,
   doc,
+  getDoc,
+  addDoc,
+  query,
+  where,
+  updateDoc,
 } from '@angular/fire/firestore';
+
+//MEhstJaJCoeuwGniOeXw
 
 @Injectable({
   providedIn: 'root',
 })
 export class SaveGameService {
-  unsubGames;
-
+  unsubGames : any;
+  modifiedGame: any = [];
   firestore: Firestore = inject(Firestore);
 
   constructor() {
-    this.unsubGames = this.subGamesList();
-    // this.unsubGames();
+    // this.unsubGames = this.subGamesList();
   }
 
-  subGamesList() {
-    return onSnapshot(this.getGamesRef(), (list) => {
-      console.log(list)
-      list.forEach((element)=>{
-        console.log(element.data())
-      })
+  ngOnDestroy(): void {
+    //Called once, before the instance is destroyed.
+    //Add 'implements OnDestroy' to the class.
+    this.unsubGames();
+  }
+
+  subGamesList(gameId: string) {
+    // console.log(this.getSingleDocRef('games', gameId));
+    const q = this.getSingleDocRef('games', gameId);
+    return onSnapshot(q, (singleGame) => {
+      // this.modifiedGame = [];
+    
+    console.log(singleGame.id);
+      
     });
+  }
+
+  async updateGame(docId: string, item: {}) {
+    const docRef = doc(this.firestore, 'games', docId);
+    await updateDoc(docRef, item);
+  }
+
+
+  /* ------------------- */
+  async addGame(game: {}) {
+    await addDoc(this.getGamesRef(), game);
+  }
+
+  async getGameById(docId: string, item: {}) {
+    const docRef = doc(this.firestore, 'games', docId);
+    const docSnap = await getDoc(docRef);
+    console.log(docSnap.data());
+
+    return docSnap.data();
   }
 
   getGamesRef() {
     return collection(this.firestore, 'games'); //this.firebase - Datenbank, notes - Referenz
-    
   }
 
   getSingleDocRef(colId: string, docId: string) {

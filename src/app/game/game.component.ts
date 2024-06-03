@@ -8,6 +8,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogAddPlayerComponent } from '../dialog-add-player/dialog-add-player.component';
 import { GameInfoComponent } from '../game-info/game-info.component';
 import { SaveGameService } from '../firebase-services/save-game/save-game.service';
+import { addDoc } from '@angular/fire/firestore';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-game',
@@ -18,8 +20,6 @@ import { SaveGameService } from '../firebase-services/save-game/save-game.servic
     MatButtonModule,
     MatIconModule,
     GameInfoComponent,
-  
-
   ],
   templateUrl: './game.component.html',
   styleUrl: './game.component.scss',
@@ -27,36 +27,55 @@ import { SaveGameService } from '../firebase-services/save-game/save-game.servic
 export class GameComponent {
   pickCardAnimation = false;
   currentCard?: string = '';
+  gameId: string = '';
   game?: Game; //Variable vom Typ game
 
-  constructor(public dialog: MatDialog,
-    private SaveGameService: SaveGameService
+  constructor(
+    public dialog: MatDialog,
+    private SaveGameService: SaveGameService,
+    private route: ActivatedRoute
   ) {}
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+    this.route.params.subscribe((params) => {
+      this.gameId = params['gameId'];
+      console.log('GAMEID', this.gameId);
+    });
+
     this.newGame();
-    console.log('PLAYER', this.game!.currentPlayer)
   }
 
-  newGame() {
+  async newGame() {
     this.game = new Game();
-    console.log(this.game);
+    // if(this.gameId === undefined){
+    //   this.game = new Game();
+    //   this.SaveGameService.addGame(this.game?.toJson);
+    // }
   }
 
   takeCard() {
     if (!this.pickCardAnimation) {
       this.currentCard = this.game?.stack.pop(); //nimmt letzten Wert aus Array, gibt Wert zurück, gleichzeitig wird dieser aus Array entfernt
       this.pickCardAnimation = true;
-   
+      // (currentPlayer + 1) % length;
       this.game!.currentPlayer++;
-      this.game!.currentPlayer = this.game!.currentPlayer % this.game!.players.length;
-      // modulo sorgt dafür das obwohl currentplayer immer hoch gezählt wird, 
+      this.game!.currentPlayer =
+        this.game!.currentPlayer % this.game!.players.length;
+      // modulo sorgt dafür das obwohl currentplayer immer hoch gezählt wird,
       //das auf die anzahl der spieler gerechnet wird und wieder bei 0 angefnagen wird, wenn alle spieler dran waren
       //after card animation finished (1000ms), push currentCard to playedCards
       setTimeout(() => {
         this.pickCardAnimation = false;
         this.game?.playedCards.push(this.currentCard!);
+        this.SaveGameService.updateGame(this.gameId, {
+          players: this.game?.players,
+          stack: this.game?.stack,
+          playedCards: this.game?.playedCards,
+          currentPlayer: this.game?.currentPlayer,
+        });
       }, 1000);
+
+      // this.game = this.SaveGameService.modifiedGame[0];
     }
   }
 
@@ -64,8 +83,14 @@ export class GameComponent {
     const dialogRef = this.dialog.open(DialogAddPlayerComponent);
     //neue Funktion wird aufgerufen mit der variable result (die dialog textfeld eingegeben wird)
     dialogRef.afterClosed().subscribe((result: string) => {
-      if(result &&result.length > 0){
-        this.game?.players.push(result)
+      if (result && result.length > 0) {
+        this.game?.players.push(result);
+        this.SaveGameService.updateGame(this.gameId, {
+          players: this.game?.players,
+          stack: this.game?.stack,
+          playedCards: this.game?.playedCards,
+          currentPlayer: this.game?.currentPlayer,
+        });
       }
     });
   }
