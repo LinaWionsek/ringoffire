@@ -1,4 +1,5 @@
 import { Injectable, inject } from '@angular/core';
+import { GameInterface } from '../../interfaces/game.interface';
 import {
   Firestore,
   collection,
@@ -18,7 +19,8 @@ import {
   providedIn: 'root',
 })
 export class SaveGameService {
-  unsubGames : any;
+ 
+  unsubGames: any;
   modifiedGame: any = [];
   firestore: Firestore = inject(Firestore);
 
@@ -37,15 +39,23 @@ export class SaveGameService {
     const q = this.getSingleDocRef('games', gameId);
     return onSnapshot(q, (singleGame) => {
       // this.modifiedGame = [];
-    
-    console.log(singleGame.id);
-      
+
+      console.log(singleGame.id);
     });
   }
 
-  async updateGame(docId: string, item: {}) {
+  async updateGame(docId: string, game: GameInterface) {
     const docRef = doc(this.firestore, 'games', docId);
-    await updateDoc(docRef, item);
+    await updateDoc(docRef, this.getCleanJson(game));
+  }
+
+  getCleanJson(game: GameInterface): {} {
+    return {
+      players: game.players,
+      stack: game.stack,
+      playedCards: game.playedCards,
+      currentPlayer: game.currentPlayer,
+    };
   }
 
 
@@ -54,12 +64,31 @@ export class SaveGameService {
     await addDoc(this.getGamesRef(), game);
   }
 
-  async getGameById(docId: string, item: {}) {
+  async getGameById(docId: string) : Promise<GameInterface> {
     const docRef = doc(this.firestore, 'games', docId);
     const docSnap = await getDoc(docRef);
-    console.log(docSnap.data());
-
-    return docSnap.data();
+    if (docSnap.exists()) {
+      console.log('Document data:', docSnap.data());
+      return  {
+        players: docSnap.data()['players'],
+        stack: docSnap.data()['stack'],
+        playedCards: docSnap.data()['playedCards'],
+        currentPlayer: docSnap.data()['currentPlayer'],
+      };
+      
+    } else {
+      // docSnap.data() will be undefined in this case
+      console.log('No such document!');
+      return  {
+        players: [],
+        stack: [],
+        playedCards: [],
+        currentPlayer: 0
+      };
+    }
+    // const docSnap = await this.getSingleDocRef('games', docId);
+    // console.log(docSnap.data(), 'getgamebyid');
+    // this.getCleanJson(docSnap.data());
   }
 
   getGamesRef() {
