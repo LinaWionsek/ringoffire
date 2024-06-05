@@ -48,15 +48,15 @@ export class GameComponent {
 
   async newGame() {
     this.game = new Game();
-    if (this.gameId === undefined) {
+    // if (this.gameId === undefined) {
    
-      this.SaveGameService.addGame(this.game?.toJson);
-    } else {
+      this.SaveGameService.addGame(this.game?.toJson());
+    // } else {
       
-      let gameUpdate = await this.SaveGameService.getGameById(this.gameId);
-      this.setGameData(gameUpdate);
+    //   let gameUpdate = await this.SaveGameService.getGameById(this.gameId);
+    //   this.setGameData(gameUpdate);
      
-    }
+    // }
   }
 
   setGameData(gameUpdate: GameInterface) {

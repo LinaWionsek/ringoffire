@@ -60,7 +60,7 @@ export class SaveGameService {
 
 
   /* ------------------- */
-  async addGame(game: {}) {
+  async addGame(game: GameInterface) {
     await addDoc(this.getGamesRef(), game);
   }
 
