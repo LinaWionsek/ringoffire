@@ -26,8 +26,8 @@ import { GameInterface } from '../interfaces/game.interface';
   styleUrl: './game.component.scss',
 })
 export class GameComponent {
-  pickCardAnimation = false;
-  currentCard?: string = '';
+  // pickCardAnimation = false;
+  // currentCard?: string = '';
   gameId: string = '';
   game?: Game; //Variable vom Typ game
 
@@ -49,56 +49,51 @@ export class GameComponent {
   async newGame() {
     this.game = new Game();
     // if (this.gameId === undefined) {
-   
-      this.SaveGameService.addGame(this.game?.toJson());
+    // this.SaveGameService.addGame(this.game?.toJson());
     // } else {
-      
-    //   let gameUpdate = await this.SaveGameService.getGameById(this.gameId);
-    //   this.setGameData(gameUpdate);
-     
+
+    let gameUpdate = await this.SaveGameService.getGameById(this.gameId);
+    this.setGameData(gameUpdate);
+
     // }
   }
 
   setGameData(gameUpdate: GameInterface) {
-      this.game!.players = gameUpdate.players;
-      this.game!.stack = gameUpdate.stack;
-      this.game!.playedCards = gameUpdate.playedCards;
-      this.game!.currentPlayer = gameUpdate.currentPlayer;
-    
+    this.game!.players = gameUpdate.players;
+    this.game!.stack = gameUpdate.stack;
+    this.game!.playedCards = gameUpdate.playedCards;
+    this.game!.currentPlayer = gameUpdate.currentPlayer;
+    this.game!.currentCard = gameUpdate.currentCard;
   }
 
   takeCard() {
-    console.log(this.game, "TAKE CARD")
-    if (!this.pickCardAnimation) {
-      this.currentCard = this.game?.stack.pop(); //nimmt letzten Wert aus Array, gibt Wert zurück, gleichzeitig wird dieser aus Array entfernt
-      this.pickCardAnimation = true;
+    console.log(this.game, 'TAKE CARD');
+    if (!this.game!.pickCardAnimation) {
+      let poper = this.game?.stack.pop();
+      this.game!.currentCard = poper?poper:''; //nimmt letzten Wert aus Array, gibt Wert zurück, gleichzeitig wird dieser aus Array entfernt
+      this.game!.pickCardAnimation = true;
       // (currentPlayer + 1) % length;
       this.game!.currentPlayer++;
       this.game!.currentPlayer =
-        this.game!.currentPlayer % this.game!.players.length;
+      this.game!.currentPlayer % this.game!.players.length;
       // modulo sorgt dafür das obwohl currentplayer immer hoch gezählt wird,
       //das auf die anzahl der spieler gerechnet wird und wieder bei 0 angefnagen wird, wenn alle spieler dran waren
       //after card animation finished (1000ms), push currentCard to playedCards
       setTimeout(() => {
-        this.pickCardAnimation = false;
-        this.game!.playedCards.push(this.currentCard!);
-        this.SaveGameService.updateGame(
-          this.gameId,
-          {
-            players: this.game!.players,
-            stack: this.game!.stack,
-            playedCards: this.game!.playedCards,
-            currentPlayer: this.game!.currentPlayer,
-          }
-    
-        );
+        this.game!.pickCardAnimation = false;
+        this.game!.playedCards.push(this.game!.currentCard!);
+        this.SaveGameService.updateGame(this.gameId, {
+          players: this.game!.players,
+          stack: this.game!.stack,
+          playedCards: this.game!.playedCards,
+          currentPlayer: this.game!.currentPlayer,
+          currentCard: this.game!.currentCard,
+          pickCardAnimation: this.game!.pickCardAnimation,
+        });
+        
       }, 1000);
-
-    
     }
   }
-
-  
 
   openDialog(): void {
     const dialogRef = this.dialog.open(DialogAddPlayerComponent);
@@ -111,8 +106,14 @@ export class GameComponent {
           stack: this.game!.stack,
           playedCards: this.game!.playedCards,
           currentPlayer: this.game!.currentPlayer,
+          currentCard: this.game!.currentCard,
+          pickCardAnimation: this.game!.pickCardAnimation,
         });
       }
     });
   }
+
+  saveGame() {}
+
+  /* /////////////////////////////////////// */
 }

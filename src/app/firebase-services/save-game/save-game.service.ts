@@ -55,6 +55,7 @@ export class SaveGameService {
       stack: game.stack,
       playedCards: game.playedCards,
       currentPlayer: game.currentPlayer,
+      currentCard: game.currentCard
     };
   }
 
@@ -74,6 +75,8 @@ export class SaveGameService {
         stack: docSnap.data()['stack'],
         playedCards: docSnap.data()['playedCards'],
         currentPlayer: docSnap.data()['currentPlayer'],
+        currentCard: docSnap.data()['currentCard'],
+        pickCardAnimation: docSnap.data()['pickCardAnimation']
       };
       
     } else {
@@ -83,7 +86,9 @@ export class SaveGameService {
         players: [],
         stack: [],
         playedCards: [],
-        currentPlayer: 0
+        currentPlayer: 0,
+        currentCard: '',
+        pickCardAnimation: false
       };
     }
     // const docSnap = await this.getSingleDocRef('games', docId);
