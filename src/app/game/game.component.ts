@@ -104,22 +104,16 @@ export class GameComponent {
       // (currentPlayer + 1) % length;
       this.game!.currentPlayer++;
       this.game!.currentPlayer =
-        this.game!.currentPlayer % this.game!.players.length;
+      this.game!.currentPlayer % this.game!.players.length;
       // modulo sorgt dafür das obwohl currentplayer immer hoch gezählt wird,
       //das auf die anzahl der spieler gerechnet wird und wieder bei 0 angefnagen wird, wenn alle spieler dran waren
       //after card animation finished (1000ms), push currentCard to playedCards
-
+      this.saveGame();
+      // PICK CARD ANIMATION BOOL IST NICHT AUFM SERVER GESPEICHERT!
       setTimeout(() => {
         this.game!.pickCardAnimation = false;
         this.game!.playedCards.push(this.game!.currentCard!);
-        this.SaveGameService.updateGame(this.gameId, {
-          players: this.game!.players,
-          stack: this.game!.stack,
-          playedCards: this.game!.playedCards,
-          currentPlayer: this.game!.currentPlayer,
-          currentCard: this.game!.currentCard,
-          pickCardAnimation: this.game!.pickCardAnimation,
-        });
+        this.saveGame();
       }, 1000);
     }
   }
@@ -130,19 +124,21 @@ export class GameComponent {
     dialogRef.afterClosed().subscribe((result: string) => {
       if (result && result.length > 0) {
         this.game!.players.push(result);
-        this.SaveGameService.updateGame(this.gameId, {
-          players: this.game!.players,
-          stack: this.game!.stack,
-          playedCards: this.game!.playedCards,
-          currentPlayer: this.game!.currentPlayer,
-          currentCard: this.game!.currentCard,
-          pickCardAnimation: this.game!.pickCardAnimation,
-        });
+        this.saveGame();
       }
     });
   }
 
-  saveGame() {}
+  saveGame() {
+    this.SaveGameService.updateGame(this.gameId, {
+      players: this.game!.players,
+      stack: this.game!.stack,
+      playedCards: this.game!.playedCards,
+      currentPlayer: this.game!.currentPlayer,
+      currentCard: this.game!.currentCard,
+      pickCardAnimation: this.game!.pickCardAnimation,
+    });
+  }
 
   /* /////////////////////////////////////// */
 }
