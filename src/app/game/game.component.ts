@@ -93,14 +93,17 @@ export class GameComponent {
     this.game!.playedCards = gameUpdate['playedCards'];
     this.game!.currentPlayer = gameUpdate['currentPlayer'];
     this.game!.currentCard = gameUpdate['currentCard'];
+    this.game!.pickCardAnimation = gameUpdate['pickCardAnimation'];
   }
 
   takeCard() {
     console.log(this.game, 'TAKE CARD');
     if (!this.game!.pickCardAnimation) {
+    
       let poper = this.game?.stack.pop();
       this.game!.currentCard = poper ? poper : ''; //nimmt letzten Wert aus Array, gibt Wert zurück, gleichzeitig wird dieser aus Array entfernt
       this.game!.pickCardAnimation = true;
+     
       // (currentPlayer + 1) % length;
       this.game!.currentPlayer++;
       this.game!.currentPlayer =
@@ -113,6 +116,7 @@ export class GameComponent {
       setTimeout(() => {
         this.game!.pickCardAnimation = false;
         this.game!.playedCards.push(this.game!.currentCard!);
+        console.log("SAVE")
         this.saveGame();
       }, 1000);
     }

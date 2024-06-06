@@ -55,7 +55,8 @@ export class SaveGameService {
       stack: game.stack,
       playedCards: game.playedCards,
       currentPlayer: game.currentPlayer,
-      currentCard: game.currentCard
+      currentCard: game.currentCard,
+      pickCardAnimation: game.pickCardAnimation,
     };
   }
 
