@@ -8,9 +8,12 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogAddPlayerComponent } from '../dialog-add-player/dialog-add-player.component';
 import { GameInfoComponent } from '../game-info/game-info.component';
 import { SaveGameService } from '../firebase-services/save-game/save-game.service';
-import { addDoc } from '@angular/fire/firestore';
+import { DocumentData, addDoc } from '@angular/fire/firestore';
 import { ActivatedRoute } from '@angular/router';
 import { GameInterface } from '../interfaces/game.interface';
+
+import { inject } from '@angular/core';
+import { Firestore, onSnapshot } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-game',
@@ -30,6 +33,7 @@ export class GameComponent {
   // currentCard?: string = '';
   gameId: string = '';
   game?: Game; //Variable vom Typ game
+  firestore: Firestore = inject(Firestore);
 
   constructor(
     public dialog: MatDialog,
@@ -41,44 +45,70 @@ export class GameComponent {
     this.route.params.subscribe((params) => {
       this.gameId = params['gameId'];
       console.log('GAMEID', this.gameId);
+
+      //-------------------------------------\
+      // const q = this.SaveGameService.getSingleDocRef('games', this.gameId);
+
+      // onSnapshot(q, (singleGame) => {
+      //   console.log(singleGame.data(), 'IDDDDDDDDDDDDDDDDDDDDDD');
+      //   let gamedata = singleGame.data();
+      //   if (this.game) {
+      //     this.game.players = gamedata!['players'];
+      //     this.game.stack = gamedata!['players'];
+      //     this.game.playedCards = gamedata!['playedCards'];
+      //     this.game.currentPlayer = gamedata!['currentPlayer'];
+      //     this.game.currentCard = gamedata!['currentCard'];
+      //   }
+      // });
+      //-------------------------------------\
     });
 
     this.newGame();
   }
 
   async newGame() {
+    //GlEICH
     this.game = new Game();
-    // if (this.gameId === undefined) {
-    // this.SaveGameService.addGame(this.game?.toJson());
-    // } else {
+    this.SaveGameService.addGame(this.game?.toJson());
+    //ALT
+    // let gameUpdate = await this.SaveGameService.getGameById(this.gameId);
+    // this.setGameData(gameUpdate);
 
-    let gameUpdate = await this.SaveGameService.getGameById(this.gameId);
-    this.setGameData(gameUpdate);
-
-    // }
+    //NEU
+    //-------------------------------------\
+    const q = this.SaveGameService.getSingleDocRef('games', this.gameId);
+    onSnapshot(q, (singleGame) => {
+      console.log(singleGame.data(), 'IDDDDDDDDDDDDDDDDDDDDDD');
+      let gamedata = singleGame.data();
+      if (gamedata) {
+        this.setGameData(gamedata);
+      }
+    });
+    //-------------------------------------\
   }
 
-  setGameData(gameUpdate: GameInterface) {
-    this.game!.players = gameUpdate.players;
-    this.game!.stack = gameUpdate.stack;
-    this.game!.playedCards = gameUpdate.playedCards;
-    this.game!.currentPlayer = gameUpdate.currentPlayer;
-    this.game!.currentCard = gameUpdate.currentCard;
+  setGameData(gameUpdate: DocumentData) {
+    this.game!.players = gameUpdate['players'];
+    this.game!.stack = gameUpdate['stack'];
+    this.game!.playedCards = gameUpdate['playedCards'];
+    this.game!.currentPlayer = gameUpdate['currentPlayer'];
+    this.game!.currentCard = gameUpdate['currentCard'];
   }
 
   takeCard() {
     console.log(this.game, 'TAKE CARD');
     if (!this.game!.pickCardAnimation) {
       let poper = this.game?.stack.pop();
-      this.game!.currentCard = poper?poper:''; //nimmt letzten Wert aus Array, gibt Wert zurück, gleichzeitig wird dieser aus Array entfernt
+      this.game!.currentCard = poper ? poper : ''; //nimmt letzten Wert aus Array, gibt Wert zurück, gleichzeitig wird dieser aus Array entfernt
       this.game!.pickCardAnimation = true;
       // (currentPlayer + 1) % length;
       this.game!.currentPlayer++;
       this.game!.currentPlayer =
-      this.game!.currentPlayer % this.game!.players.length;
+        this.game!.currentPlayer % this.game!.players.length;
       // modulo sorgt dafür das obwohl currentplayer immer hoch gezählt wird,
       //das auf die anzahl der spieler gerechnet wird und wieder bei 0 angefnagen wird, wenn alle spieler dran waren
       //after card animation finished (1000ms), push currentCard to playedCards
+
       setTimeout(() => {
         this.game!.pickCardAnimation = false;
         this.game!.playedCards.push(this.game!.currentCard!);
@@ -90,7 +120,6 @@ export class GameComponent {
           currentCard: this.game!.currentCard,
           pickCardAnimation: this.game!.pickCardAnimation,
         });
-        
       }, 1000);
     }
   }
