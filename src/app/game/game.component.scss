@@ -77,3 +77,16 @@
     bottom: 0;
   }
 }
+
+.scroll-container {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  display: flex;
+  overflow-x: auto;
+  overflow-y: hidden;
+  app-player-mobile {
+    margin-left: 8px;
+  }
+}

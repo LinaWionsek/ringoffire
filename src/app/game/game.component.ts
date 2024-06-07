@@ -2,6 +2,7 @@ import { COMPILER_OPTIONS, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Game } from './../../models/game';
 import { PlayerComponent } from '../player/player.component';
+import { PlayerMobileComponent } from '../player-mobile/player-mobile.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
@@ -21,6 +22,7 @@ import { Firestore, onSnapshot } from '@angular/fire/firestore';
   imports: [
     CommonModule,
     PlayerComponent,
+    PlayerMobileComponent,
     MatButtonModule,
     MatIconModule,
     GameInfoComponent,
