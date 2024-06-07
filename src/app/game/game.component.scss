@@ -6,10 +6,15 @@
   display: flex;
   justify-content: center;
   align-items: center;
+
+  
 }
 
 .card-stack {
   position: relative;
+  @media (max-width: 720px) {
+    margin-bottom: 100px;
+   }
   img {
     position: absolute;
   }
@@ -20,21 +25,39 @@
   cursor: pointer;
   transition: all 125ms ease-in-out;
 
+  @media (max-width: 720px) {
+    height: 190px;
+    width: 140px;
+    &:hover {
+      transform: scale(1.0) translateY(0px) !important;
+    }
+   }
+
   &:hover {
     transform: scale(1.1) translateY(-10px);
   }
+  
+}
+
+.mobile-card-size {
+  @media (max-width: 720px) {
+    height: 190px;
+    width: 140px !important;
+   }
 }
 
 .pick-card {
   transition: all 125ms ease-in-out;
   animation: pick-card-animation 1s ease-in-out;
-  transform: scale(1.2) translateX(130px) translateY(-200px) rotate(-25deg);
+  transform: scale(1.0) translateX(130px) translateY(-200px) rotate(-25deg);
 }
 
 .played-card {
   right: 25px;
 
-  transform: scale(1.2) translateX(130px) translateY(-200px) rotate(-25deg);
+  transform: scale(1.0) translateX(130px) translateY(-200px) rotate(-25deg);
+
+  
 }
 
 @keyframes pick-card-animation {
@@ -48,7 +71,7 @@
     transform: scale(1.6);
   }
   100% {
-    transform: scale(1.2) translateX(130px) translateY(-200px) rotate(-25deg);
+    transform: scale(1.0) translateX(130px) translateY(-200px) rotate(-25deg);
   }
 }
 //40 60 100
@@ -58,11 +81,21 @@
   z-index: 1;
   right: 0;
 }
-
+@media (max-width: 720px) {
+ button {
+  height: 32px;
+  width: 32px;
+ }
+ }
 .btn-add {
   position: absolute;
   right: 32px;
   bottom: 32px;
+
+  @media (max-width: 720px) {
+    right: 12px;
+    bottom: 12px;
+  }
 }
 
 .pin-bottom {
@@ -72,9 +105,9 @@
   right: 100px;
 
   @media (max-width: 720px) {
-    left: 0;
-    right: 0;
-    bottom: 0;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
   }
 }
 
