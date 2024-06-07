@@ -99,29 +99,35 @@ export class GameComponent {
   }
 
   takeCard() {
-    console.log(this.game, 'TAKE CARD');
-    if (!this.game!.pickCardAnimation) {
-    
-      let poper = this.game?.stack.pop();
-      this.game!.currentCard = poper ? poper : ''; //nimmt letzten Wert aus Array, gibt Wert zurück, gleichzeitig wird dieser aus Array entfernt
-      this.game!.pickCardAnimation = true;
-     
-      // (currentPlayer + 1) % length;
-      this.game!.currentPlayer++;
-      this.game!.currentPlayer =
-      this.game!.currentPlayer % this.game!.players.length;
-      // modulo sorgt dafür das obwohl currentplayer immer hoch gezählt wird,
-      //das auf die anzahl der spieler gerechnet wird und wieder bei 0 angefnagen wird, wenn alle spieler dran waren
-      //after card animation finished (1000ms), push currentCard to playedCards
-      this.saveGame();
-      // PICK CARD ANIMATION BOOL IST NICHT AUFM SERVER GESPEICHERT!
-      setTimeout(() => {
-        this.game!.pickCardAnimation = false;
-        this.game!.playedCards.push(this.game!.currentCard!);
-        console.log("SAVE")
+    if (this.game!.players.length > 0) {
+      console.log(this.game, 'TAKE CARD');
+      if (!this.game!.pickCardAnimation) {
+      
+        let poper = this.game?.stack.pop();
+        this.game!.currentCard = poper ? poper : ''; //nimmt letzten Wert aus Array, gibt Wert zurück, gleichzeitig wird dieser aus Array entfernt
+        this.game!.pickCardAnimation = true;
+       
+        // (currentPlayer + 1) % length;
+        this.game!.currentPlayer++;
+        this.game!.currentPlayer =
+        this.game!.currentPlayer % this.game!.players.length;
+        // modulo sorgt dafür das obwohl currentplayer immer hoch gezählt wird,
+        //das auf die anzahl der spieler gerechnet wird und wieder bei 0 angefnagen wird, wenn alle spieler dran waren
+        //after card animation finished (1000ms), push currentCard to playedCards
         this.saveGame();
-      }, 1000);
+        // PICK CARD ANIMATION BOOL IST NICHT AUFM SERVER GESPEICHERT!
+        setTimeout(() => {
+          this.game!.pickCardAnimation = false;
+          this.game!.playedCards.push(this.game!.currentCard!);
+          console.log("SAVE")
+          this.saveGame();
+        }, 1000);
+      }
+    } else {
+      alert('Please create a player first!');
     }
+
+   
   }
 
   openDialog(): void {
