@@ -12,6 +12,7 @@ import { SaveGameService } from '../firebase-services/save-game/save-game.servic
 import { DocumentData, addDoc } from '@angular/fire/firestore';
 import { ActivatedRoute } from '@angular/router';
 import { GameInterface } from '../interfaces/game.interface';
+import { Router } from '@angular/router';
 
 import { inject } from '@angular/core';
 import { Firestore, onSnapshot } from '@angular/fire/firestore';
@@ -36,11 +37,13 @@ export class GameComponent {
   gameId: string = '';
   game?: Game; //Variable vom Typ game
   firestore: Firestore = inject(Firestore);
+  gameEnd: boolean = false;
 
   constructor(
     public dialog: MatDialog,
     private SaveGameService: SaveGameService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -100,17 +103,14 @@ export class GameComponent {
 
   takeCard() {
     if (this.game!.players.length > 0) {
-      console.log(this.game, 'TAKE CARD');
+
       if (!this.game!.pickCardAnimation) {
-      
         let poper = this.game?.stack.pop();
         this.game!.currentCard = poper ? poper : ''; //nimmt letzten Wert aus Array, gibt Wert zurück, gleichzeitig wird dieser aus Array entfernt
         this.game!.pickCardAnimation = true;
-       
-        // (currentPlayer + 1) % length;
-        this.game!.currentPlayer++;
+        this.game!.currentPlayer++; // (currentPlayer + 1) % length;
         this.game!.currentPlayer =
-        this.game!.currentPlayer % this.game!.players.length;
+          this.game!.currentPlayer % this.game!.players.length;
         // modulo sorgt dafür das obwohl currentplayer immer hoch gezählt wird,
         //das auf die anzahl der spieler gerechnet wird und wieder bei 0 angefnagen wird, wenn alle spieler dran waren
         //after card animation finished (1000ms), push currentCard to playedCards
@@ -119,15 +119,21 @@ export class GameComponent {
         setTimeout(() => {
           this.game!.pickCardAnimation = false;
           this.game!.playedCards.push(this.game!.currentCard!);
-          console.log("SAVE")
           this.saveGame();
+
+          if (this.game!.playedCards.length === 2) {
+            this.gameEnd = true;
+            setTimeout(() => {
+              this.router.navigate(['/']);
+            }, 3000);
+          }
+
         }, 1000);
       }
+
     } else {
       alert('Please create a player first!');
     }
-
-   
   }
 
   openDialog(): void {
