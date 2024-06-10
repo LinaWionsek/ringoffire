@@ -1,7 +1,6 @@
 .start-screen {
   background-color: white;
   background-size: cover;
-  // background-position: 50% 50%;
   width: 100vw;
   height: 100vh;
   max-width: 100%; /* max-width weil scrollbalken nicht eingerechnet sind bei vw */
@@ -9,10 +8,12 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
+
   @media (max-width: 960px) {
     overflow: hidden;
   }
 }
+
 .start-label-box {
   position: absolute;
   left: 0;
@@ -28,21 +29,19 @@
     width: 20vw;
     height: auto;
     bottom: 0;
-
+    &:hover {
+      filter: brightness(1.2);
+      cursor: pointer;
+    }
     @media (max-width: 960px) {
       width: 300px;
     }
-    
-    &:hover {
-        filter: brightness(1.20);
-        cursor: pointer;
-    }
   }
 }
+
 .fire-logo {
   height: 100vh;
   @media (max-width: 600px) {
     width: 600px;
   }
-  //    width: 100%;
 }
