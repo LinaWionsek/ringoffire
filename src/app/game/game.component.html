@@ -1,7 +1,3 @@
-<div *ngIf="gameEnd" class="endscreen">
-  <span>All cards have been played</span>
-  
-</div>
 <app-player *ngFor="let player of game?.players; let i = index;" [ngStyle]="{'top.px': 100 + (i * 90)}"
     [playerActive]="i == game?.currentPlayer" [name]="player" class="player-position hide-mobile"></app-player>
 
@@ -10,7 +6,7 @@
         [name]="player" class="hide-desktop"></app-player-mobile>
 </div>
 
-<!-- i == game?.currentPlayer -->
+
 
 <div class="field">
     <div class="card-stack">
@@ -37,3 +33,6 @@
 <button mat-fab color="primary" (click)="openDialog()" class="btn-add">
     <mat-icon>add</mat-icon>
 </button>
+<div *ngIf="gameEnd" class="endscreen">
+    <span>All cards have been played</span>
+</div>
