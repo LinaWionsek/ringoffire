@@ -3,33 +3,18 @@ import { GameInterface } from '../../interfaces/game.interface';
 import {
   Firestore,
   collection,
-  onSnapshot,
   doc,
-  getDoc,
   addDoc,
   updateDoc,
 } from '@angular/fire/firestore';
-
-//MEhstJaJCoeuwGniOeXw
 
 @Injectable({
   providedIn: 'root',
 })
 export class SaveGameService {
-  unsubGames: any;
-  modifiedGame: any = [];
   firestore: Firestore = inject(Firestore);
 
-  constructor() {
-    // this.unsubGames = this.subGamesList();
-  }
-
-  ngOnDestroy(): void {
-    //Called once, before the instance is destroyed.
-    //Add 'implements OnDestroy' to the class.
-    // this.unsubGames();
-  }
-
+  constructor() {}
 
 
   /**
@@ -43,6 +28,7 @@ export class SaveGameService {
     const docRef = doc(this.firestore, 'games', docId);
     await updateDoc(docRef, this.getCleanJson(game));
   }
+
 
   /**
    * Returns a clean JSON representation of the given GameInterface object.
@@ -61,6 +47,7 @@ export class SaveGameService {
     };
   }
 
+
   /**
    * Asynchronously adds a new game to the 'games' collection in Firestore.
    *
@@ -71,13 +58,25 @@ export class SaveGameService {
     await addDoc(this.getGamesRef(), game);
   }
 
+
+  /**
+   * Returns a reference to the 'games' collection in the Firestore database.
+   *
+   * @return {CollectionReference} A reference to the 'games' collection.
+   */
   getGamesRef() {
-    return collection(this.firestore, 'games'); //this.firebase - Datenbank, notes - Referenz
+    return collection(this.firestore, 'games'); 
   }
 
+
+  /**
+   * Returns a reference to a single document in the specified collection with the given document ID.
+   *
+   * @param {string} colId - The ID of the collection.
+   * @param {string} docId - The ID of the document.
+   * @return {DocumentReference} A reference to the specified document.
+   */
   getSingleDocRef(colId: string, docId: string) {
     return doc(collection(this.firestore, colId), docId); //docId ist dieser Zahlensalat der an dem Eintrag klebt
   }
-
-  /* ------------------- */
 }

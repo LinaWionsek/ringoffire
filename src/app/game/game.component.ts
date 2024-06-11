@@ -9,7 +9,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogAddPlayerComponent } from '../dialog-add-player/dialog-add-player.component';
 import { GameInfoComponent } from '../game-info/game-info.component';
 import { SaveGameService } from '../firebase-services/save-game/save-game.service';
-import { DocumentData, addDoc } from '@angular/fire/firestore';
+import { DocumentData, Unsubscribe, addDoc } from '@angular/fire/firestore';
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
 import { inject } from '@angular/core';
@@ -34,6 +34,7 @@ export class GameComponent {
   gameId: string = '';
   game?: Game; //Variable vom Typ game
   firestore: Firestore = inject(Firestore);
+  unsubGames: any;
 
 
   constructor(
@@ -42,6 +43,15 @@ export class GameComponent {
     private route: ActivatedRoute,
     private router: Router
   ) {}
+
+
+  /**
+   * Called once, before the instance is destroyed.
+   * Unsubscribes from the 'games' observable to prevent memory leaks.
+   */
+  ngOnDestroy(): void {
+    this.unsubGames();
+  }
 
 
   /**
@@ -67,13 +77,13 @@ export class GameComponent {
     this.game = new Game();
     this.SaveGameService.addGame(this.game?.toJson());
     const q = this.SaveGameService.getSingleDocRef('games', this.gameId);
-    onSnapshot(q, (singleGame) => {
-      console.log(singleGame.data(), 'IDDDDDDDDDDDDDDDDDDDDDD');
+    this.unsubGames = onSnapshot(q, (singleGame) => {
       let gamedata = singleGame.data();
       if (gamedata) {
         this.setGameData(gamedata);
       }
     });
+   
   }
 
 
@@ -140,7 +150,7 @@ export class GameComponent {
       this.game!.pickCardAnimation = false;
       this.game!.playedCards.push(this.game!.currentCard!);
       this.saveGame();
-      if (this.game!.playedCards.length === 2) {
+      if (this.game!.playedCards.length === 52) {
         this.endGame();
       }
       // after card animation finished (1000ms), push currentCard to playedCards
@@ -155,10 +165,8 @@ export class GameComponent {
    */
   endGame() {
     this.game!.gameEnd = true;
-    console.log(this.game?.gameEnd)
     this.saveGame();
     setTimeout(() => {
-      alert('Game ended!');
       this.router.navigate(['/']);
     }, 3000);
   }

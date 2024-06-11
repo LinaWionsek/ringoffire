@@ -33,7 +33,6 @@ export class StartScreenComponent {
         console.error(err);
       })
       .then((gameInfo) => {
-        console.log('Document written with ID: ', gameInfo?.id);
         // Start game
         this.router.navigateByUrl('/game/' + gameInfo!.id);
       });

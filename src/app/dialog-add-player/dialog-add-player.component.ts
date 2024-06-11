@@ -21,6 +21,13 @@ export class DialogAddPlayerComponent {
   
   constructor(public dialogRef: MatDialogRef<DialogAddPlayerComponent>) {}
 
+  /**
+   * Closes the dialog and dismisses it.
+   *
+   * This function is called when the user clicks the "No" button in the dialog.
+   * It closes the dialog and dismisses it, returning control to the caller.
+   *
+   */
   onNoClick(): void {
     this.dialogRef.close()
   }
