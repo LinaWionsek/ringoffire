@@ -4,8 +4,8 @@ export class Game {
   public playedCards: string[] = [];
   public currentPlayer: number = 0;
   public currentCard: string = '';
-  public pickCardAnimation = false;
-
+  public pickCardAnimation: boolean = false;
+  public gameEnd: boolean = false;
 
   /**
    * Initializes the game by populating the stack with card names and shuffling the stack.
@@ -37,6 +37,7 @@ export class Game {
       currentPlayer: this.currentPlayer,
       currentCard: this.currentCard,
       pickCardAnimation: this.pickCardAnimation,
+      gameEnd: this.gameEnd
     };
   }
 }

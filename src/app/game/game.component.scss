@@ -123,15 +123,23 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 20px;
   z-index: 1000;
-  background-color: black;
-  color: white;
   position: absolute;
   top: 0;
   bottom: 0;
   left: 0;
   right: 0;
-  font-size: 80px;
-  font-weight: 800;
+  > div {
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50vh;
+    > span {
+      font-size: 48px;
+      line-height: normal;
+      text-align: center;
+      color: #FCC800;
+    }
+  }
 }

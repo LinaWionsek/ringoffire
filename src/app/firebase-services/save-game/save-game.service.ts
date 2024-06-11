@@ -57,6 +57,7 @@ export class SaveGameService {
       currentPlayer: game.currentPlayer,
       currentCard: game.currentCard,
       pickCardAnimation: game.pickCardAnimation,
+      gameEnd: game.gameEnd,
     };
   }
 

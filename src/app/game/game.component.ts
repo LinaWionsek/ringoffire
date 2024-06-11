@@ -34,7 +34,7 @@ export class GameComponent {
   gameId: string = '';
   game?: Game; //Variable vom Typ game
   firestore: Firestore = inject(Firestore);
-  gameEnd: boolean = false;
+
 
   constructor(
     public dialog: MatDialog,
@@ -89,6 +89,7 @@ export class GameComponent {
     this.game!.currentPlayer = gameUpdate['currentPlayer'];
     this.game!.currentCard = gameUpdate['currentCard'];
     this.game!.pickCardAnimation = gameUpdate['pickCardAnimation'];
+    this.game!.gameEnd = gameUpdate['gameEnd'];
   }
 
 
@@ -153,8 +154,11 @@ export class GameComponent {
    *
    */
   endGame() {
-    this.gameEnd = true;
+    this.game!.gameEnd = true;
+    console.log(this.game?.gameEnd)
+    this.saveGame();
     setTimeout(() => {
+      alert('Game ended!');
       this.router.navigate(['/']);
     }, 3000);
   }
@@ -172,6 +176,7 @@ export class GameComponent {
       currentPlayer: this.game!.currentPlayer,
       currentCard: this.game!.currentCard,
       pickCardAnimation: this.game!.pickCardAnimation,
+      gameEnd: this.game!.gameEnd,
     });
   }
 

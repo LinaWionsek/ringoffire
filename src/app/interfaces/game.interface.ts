@@ -5,4 +5,5 @@ export interface GameInterface {
      currentPlayer: number,
      currentCard: string,
      pickCardAnimation: boolean;
+     gameEnd: boolean;
 }

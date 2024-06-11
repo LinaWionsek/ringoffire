@@ -33,6 +33,8 @@
 <button mat-fab color="primary" (click)="openDialog()" class="btn-add">
     <mat-icon>add</mat-icon>
 </button>
-<div *ngIf="gameEnd" class="endscreen">
-    <span>All cards have been played</span>
+<div *ngIf="game?.gameEnd" class="endscreen">
+    <div>
+        <span>All cards have been played!</span>
+    </div>
 </div>
