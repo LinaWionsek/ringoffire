@@ -79,15 +79,15 @@ export class GameInfoComponent {
   description = '';
   @Input()card?: string;
 
+  constructor() {}
 
-  
-  constructor() {
-    // console.log('current card',this.card);
-  }
-
+    /**
+   * Updates the title and description of the component based on the value of the 'card' input property.
+   * If the 'card' input property is not null, the card number is extracted from the 'card' string,
+   * and the corresponding title and description are retrieved from the 'cardAction' array.
+   */
   ngOnChanges() {
     if(this.card){
-      // console.log('current card',this.card);
       let cardNumber = +this.card!.split('_')[1];
       this.title = this.cardAction[cardNumber - 1].title;
       this.description = this.cardAction[cardNumber - 1].description;

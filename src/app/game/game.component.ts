@@ -29,9 +29,8 @@ import { Firestore, onSnapshot } from '@angular/fire/firestore';
   templateUrl: './game.component.html',
   styleUrl: './game.component.scss',
 })
+
 export class GameComponent {
-  // pickCardAnimation = false;
-  // currentCard?: string = '';
   gameId: string = '';
   game?: Game; //Variable vom Typ game
   firestore: Firestore = inject(Firestore);
@@ -44,14 +43,26 @@ export class GameComponent {
     private router: Router
   ) {}
 
+
+  /**
+ * Initializes the component and subscribes to the route parameters to get the gameId.
+ * Calls the newGame() method to initialize a new game.
+ *
+ * @return {Promise<void>} A promise that resolves when the initialization is complete.
+ */
   async ngOnInit(): Promise<void> {
     this.route.params.subscribe((params) => {
       this.gameId = params['gameId'];
     });
-
     this.newGame();
   }
 
+
+  /**
+   * Initializes the component and subscribes to the route parameters to get the gameId.
+   * Calls the newGame() method to initialize a new game.
+   *
+   */
   async newGame() {
     this.game = new Game();
     this.SaveGameService.addGame(this.game?.toJson());
@@ -65,6 +76,12 @@ export class GameComponent {
     });
   }
 
+
+  /**
+   * Updates the game data with the provided game update.
+   *
+   * @param {DocumentData} gameUpdate - The game update containing the new data.
+   */
   setGameData(gameUpdate: DocumentData) {
     this.game!.players = gameUpdate['players'];
     this.game!.stack = gameUpdate['stack'];
@@ -74,6 +91,12 @@ export class GameComponent {
     this.game!.pickCardAnimation = gameUpdate['pickCardAnimation'];
   }
 
+
+  /**
+   * Takes a card from the game if there are players and the pick card animation is not active.
+   * Saves the game and updates the played card stack.
+   * Displays an alert message if there are no players.
+   */
   takeCard() {
     if (this.game!.players.length > 0) {
       if (!this.game!.pickCardAnimation) {
@@ -86,18 +109,31 @@ export class GameComponent {
     }
   }
 
+
+  /**
+   * Animates a card by popping it from the game stack, setting it as the current card,
+   * enabling the card animation, incrementing the current player, and wrapping around
+   * to the first player if all players have played their turn. After the animation
+   * finishes, the current card is pushed to the played cards array.
+   */
   animateCard() {
-    // modulo sorgt dafür das obwohl currentplayer immer hoch gezählt wird,
-    //das auf die anzahl der spieler gerechnet wird und wieder bei 0 angefnagen wird, wenn alle spieler dran waren
-    //after card animation finished (1000ms), push currentCard to playedCards
     let poper = this.game?.stack.pop();
-    this.game!.currentCard = poper ? poper : ''; //nimmt letzten Wert aus Array, gibt Wert zurück, gleichzeitig wird dieser aus Array entfernt
+    this.game!.currentCard = poper ? poper : ''; //takes last value from array, returns value, at the same time this is removed from the array
     this.game!.pickCardAnimation = true;
     this.game!.currentPlayer++; // (currentPlayer + 1) % length;
     this.game!.currentPlayer =
       this.game!.currentPlayer % this.game!.players.length;
+    // modulo ensures that although currentplayer is always counted up,
+    // that is calculated on the number of players and starts again at 0 when all players have had their turn
   }
 
+
+  /**
+   * Updates the played card stack by setting the pick card animation to false,
+   * pushing the current card to the played cards array, saving the game, and
+   * ending the game if the number of played cards is equal to 2.
+   *
+   */
   updatePlayedCardStack() {
     setTimeout(() => {
       this.game!.pickCardAnimation = false;
@@ -106,9 +142,16 @@ export class GameComponent {
       if (this.game!.playedCards.length === 2) {
         this.endGame();
       }
+      // after card animation finished (1000ms), push currentCard to playedCards
     }, 1000);
   }
 
+
+  /**
+   * 
+   * Ends the game and navigates to the root route after a delay of 3000 milliseconds.
+   *
+   */
   endGame() {
     this.gameEnd = true;
     setTimeout(() => {
@@ -116,6 +159,11 @@ export class GameComponent {
     }, 3000);
   }
 
+
+  /**
+   * Saves the game by calling the `updateGame` method of the `SaveGameService` with the current game data.
+   *
+   */
   saveGame() {
     this.SaveGameService.updateGame(this.gameId, {
       players: this.game!.players,
@@ -126,7 +174,12 @@ export class GameComponent {
       pickCardAnimation: this.game!.pickCardAnimation,
     });
   }
-  
+
+
+  /**
+   * Opens a dialog to add a player to the game.
+   *
+   */
   openDialog(): void {
     const dialogRef = this.dialog.open(DialogAddPlayerComponent);
     //neue Funktion wird aufgerufen mit der variable result (die dialog textfeld eingegeben wird)
@@ -137,5 +190,4 @@ export class GameComponent {
       }
     });
   }
-  /* /////////////////////////////////////// */
 }

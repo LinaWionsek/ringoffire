@@ -6,17 +6,15 @@
   display: flex;
   justify-content: center;
   align-items: center;
-
-  
 }
 
 .card-stack {
   position: relative;
-  @media (max-width: 720px) {
-    margin-bottom: 100px;
-   }
   img {
     position: absolute;
+  }
+  @media (max-width: 720px) {
+    margin-bottom: 100px;
   }
 }
 
@@ -24,40 +22,34 @@
   width: 150px;
   cursor: pointer;
   transition: all 125ms ease-in-out;
-
+  &:hover {
+    transform: scale(1.1) translateY(-10px);
+  }
   @media (max-width: 720px) {
     height: 190px;
     width: 140px;
     &:hover {
-      transform: scale(1.0) translateY(0px) !important;
+      transform: scale(1) translateY(0px) !important;
     }
-   }
-
-  &:hover {
-    transform: scale(1.1) translateY(-10px);
   }
-  
 }
 
 .mobile-card-size {
   @media (max-width: 720px) {
     height: 190px;
     width: 140px !important;
-   }
+  }
 }
 
 .pick-card {
   transition: all 125ms ease-in-out;
   animation: pick-card-animation 1s ease-in-out;
-  transform: scale(1.0) translateX(130px) translateY(-200px) rotate(-25deg);
+  transform: scale(1) translateX(130px) translateY(-200px) rotate(-25deg);
 }
 
 .played-card {
   right: 25px;
-
-  transform: scale(1.0) translateX(130px) translateY(-200px) rotate(-25deg);
-
-  
+  transform: scale(1) translateX(130px) translateY(-200px) rotate(-25deg);
 }
 
 @keyframes pick-card-animation {
@@ -71,27 +63,27 @@
     transform: scale(1.6);
   }
   100% {
-    transform: scale(1.0) translateX(130px) translateY(-200px) rotate(-25deg);
+    transform: scale(1) translateX(130px) translateY(-200px) rotate(-25deg);
   }
 }
-//40 60 100
 
 .player-position {
   position: absolute;
   z-index: 1;
   right: 0;
 }
+
 @media (max-width: 720px) {
- button {
-  height: 32px;
-  width: 32px;
- }
- }
+  button {
+    height: 32px;
+    width: 32px;
+  }
+}
+
 .btn-add {
   position: absolute;
   right: 32px;
   bottom: 32px;
-
   @media (max-width: 720px) {
     right: 12px;
     bottom: 12px;
@@ -103,7 +95,6 @@
   bottom: 32px;
   left: 100px;
   right: 100px;
-
   @media (max-width: 720px) {
     left: 0 !important;
     right: 0 !important;
